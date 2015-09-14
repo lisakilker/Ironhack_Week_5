@@ -73,6 +73,7 @@
     <div class="colours">
       <button class="blue">Blue</button>
       <button class="yellow">Yellow</button>
+      <button class="multi">MultiColor</button>
     </div>
   </form>
 
@@ -96,12 +97,15 @@
         event.preventDefault()
         var name = $('[name=name]').val()
         $('#name').text(name)
+        // var name = $('input[name=name').val();
         var jobTitle = $('[name=job-title]').val()
         $('#job-title').text(jobTitle)
         var phone = $('[name=phone]').val()
         $('#phone').text(phone)
         var email = $('[name=email]').val()
-        $('#email').text(email)
+        var href = 'mailto:' +email;
+        var aLink = '<a href="' + href + '">' +email +'</a>'
+        $('#email').html(aLink);
       });
 
       $('button.blue').on('click', function(event) {
@@ -112,7 +116,11 @@
         event.preventDefault()
         $('.biz-card').toggleClass('yellow');
       });
-    })()
+        $('button.multi').on('click', function(event) {
+        event.preventDefault()
+        $('.colours').unicornblast('red');
+      });
+      });
   </script>
 </body>
 </html>
