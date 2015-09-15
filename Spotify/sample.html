@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  	<head>
+  		<title>Lisa's Spotify</title>
+  			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  			<style>
+    body {
+      font-family: Helvetica, sans-serif;
+    }
+    input {
+      height: 20px;
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      height: 32px;
+      font-size: 16px;
+    }
+    img {
+    	width: 100px;
+    	height: 100px;
+    	padding: 10px;
+    	display:block;
+  		float:center;
+    }
+  </style>
+	</head>
+  		<h1>Lisa's Spotify</h1>
+ 	
+ 	<body>
+	    <form>
+	        Artist <input type="text" name="name">
+	        <button class="js-submit" type="submit">Submit</button>
+	        <button class="js-submit-albums" type="submit">Get Albums</button>
+	        <input type="button" value="Reload" onClick="history.go(0)">
+	    </form>
+	        <ul class="js-bands-list"></ul>
+  
+		  <script>
+		    function fetchArtist(name) {
+		    var request = $.get('https://api.spotify.com/v1/search?type=artist&query=' + name);
+		      	request.done(handleArtist);
+		    }
+
+		    function handleArtist(band) {
+		      	console.log("REQUEST DONE", band);
+		      	band.artists.items.forEach(function appendLi(bnd){
+		      		console.log(bnd.images[0].url)
+		    		var html = "<li>" + bnd.name + '<img src="' + bnd.images[0].url + '"></li>';
+		    		$(".js-bands-list").append(html);
+		      	});
+		    };
+
+		    $('.js-submit').on('click', onSubmit);
+
+		    function onSubmit (event) {
+		    	event.preventDefault();
+		      	console.log('SUBMITTED');
+		    	var Name = $('[name=name]').val()
+		    	fetchArtist(Name)
+		    }
+		  </script>
+	</body>
+</html>

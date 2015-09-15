@@ -1,0 +1,51 @@
+<head>
+  <title>Ironhack Characters</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+  <h1>AJAX</h1>
+    <body>
+    <form>
+        Name <input type="text" name="name"><br>
+        Occupation <input type="text" name="occupation"><br>
+        Weapon <input type="text" name="weapon"><br>
+        <button class="js-submit" type="submit">SUBMIT</button>
+    </form>
+        <button class="js-characters">Fetch characters</button>
+        <ul class="js-character-list"></ul>
+  
+  <script>
+
+    $('.js-characters').on('click', fetchCharacters);
+
+    function fetchCharacters(event) {
+      event.preventDefault();
+      var request = $.get('https://ironhack-characters.herokuapp.com/characters');
+      request.done(handleCharacters);
+    }
+
+    function handleCharacters(characters) {
+      console.log("REQUEST DONE", characters);
+      characters.forEach(function appendLi(chr){
+        var html = "<li>" + chr.name + chr.occupation + chr.weapon + "</li>";
+        $(".js-character-list").append(html);
+      });
+    };
+
+    $('.js-submit').on('click', onSubmit);
+
+    function onSubmit (event) {
+      event.preventDefault();
+      console.log('SUBMITTED');
+      var Name = $('[name=name]').val()
+      var Occupation = $('[name=occupation]').val()
+      var Weapon = $('[name=weapon]').val()
+
+      var newCharacter = {
+       name: Name,
+       occupation: Occupation,
+       weapon: Weapon
+      }
+      var request = $.post ("http://ironhack-characters.herokuapp.com/characters", newCharacter);
+    }
+  </script>
+</body>
