@@ -33,10 +33,12 @@
 	        Artist <input type="text" name="name">
 	        <button class="js-submit" type="submit">Get Artist</button>
 	        <button class="js-submit-albums" type="submit">Get Albums</button>
+	        <button class="js-submit-tracks" type="submit">Get Track List</button>
 	        <input type="button" value="Reload" onClick="history.go(0)">
 	    </form>
 	        <ul class="js-bands-list"></ul>
 	        <ul class="js-albums-list"></ul>
+	        <ul class="js-tracks"></ul>
   
 		  <script>
 		    function fetchArtist(name) {
@@ -48,41 +50,65 @@
 		      	console.log("REQUEST DONE", band);
 		      	$(".js-submit-albums").attr('data-id', band.artists.items[0].id)
 		      	band.artists.items.forEach(function appendLi(bnd){
-		      		console.log(bnd.images[0].url)
-		    		var html = "<li>" + bnd.name + '<img src="' + bnd.images[0].url + '"></li>';
-		    		$(".js-bands-list").append(html);
+		      	console.log(bnd.images[0].url)
+		    var html = "<li>" + bnd.name + '<img src="' + bnd.images[0].url + '"></li>\n';
+		    	$(".js-bands-list").html(html);
 		      	});
 		    };
 
 		    function fetchAlbum(artist) {
 		    	console.log(artist);
-		    var request = $.get('https://api.spotify.com/v1/artists/'+ artist +'/albums' );
+		    var request = $.get('https://api.spotify.com/v1/artists/'+ artist +'/albums');
 		      	request.done(handleAlbum);
 		    }
 
 		    function handleAlbum(albums) {
 		      	console.log("REQUEST DONE", albums);
+		    var resultHTML = ""
 		      	albums.items.forEach(function appendLi(alb){
-		    		var html = "<li>" + alb.name + "</li>";
-		    		$(".js-albums-list").append(html);
+		    	resultHTML += "<li>" + alb.name + "</li>\n";
 		      	});
+		     	$(".js-albums-list").html(resultHTML);
 		    };
 
-		    $('.js-submit').on('click', showArtists);
-		    $('.js-submit-albums').on('click', showAlbums);
+		      function fetchTracks(songs) {
+		    	console.log(songs);
+		    var request = $.get('https://api.spotify.com/v1/artists/'+ songs +'/albums');
+		      	request.done(handleTracks);
+		    }
+
+		    function handleTracks(tracks) {
+		      	console.log("REQUEST DONE", tracks);
+		    var showHTML = ""
+		      	tracks.items.forEach(function appendLi(trk){
+		    	showHTML += "<li>" + trk.name + "</li>\n";
+		      	});
+		     	$(".js-tracks").html(showHTML);
+		    };
+
+		    	$('.js-submit').on('click', showArtists);
+		    	$('.js-submit-albums').on('click', showAlbums);
+		    	$('.js-submit-tracks').on('click', showTracks);
 
 		    function showArtists (event) {
 		    	event.preventDefault();
 		      	console.log('SUBMITTED');
-		    	var Name = $('[name=name]').val()
+		   	var Name = $('[name=name]').val()
 		    	fetchArtist(Name)
 		    }
 
 		    function showAlbums (event) {
 		    	event.preventDefault();
 		      	console.log('SUBMITTED');
-		    	var artistId = $('.js-submit-albums').attr('data-id')
+		    var artistId = $('.js-submit-albums').attr('data-id')
 		    	fetchAlbum(artistId)
+		    }
+
+		     function showTracks (event) {
+		    	event.preventDefault();
+		      	console.log('SUBMITTED');
+		    var artistId = $('.js-submit-tracks').attr('data-id')
+		    	fetchTracks(artistId)
 		    }
 		  </script>
 	</body>
