@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+</head>
+
+<input type="text" >
+
+<script>
+var elements = document.getElementsByTagName("input");
+
+var n = elements.length;
+
+for (var i = 0; i < n; i++) {
+	elements[i].onclick = function() {
+		console.log("This is element # " + i);
+	};
+}
+</script>
+
+</body>
+</html>

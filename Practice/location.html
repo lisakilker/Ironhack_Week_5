@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  	<head>
+  		<title>Lisa's Maps</title>
+  			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  	<h1>Where's Lisa?</h1>
+  				<p><strong>Your target is: </strong></p>
+  				<button id="where-am-i">Where am I?</button>  
+				<p id="position"></p>
+				<img src="" id="map">
+	<body>
+		<script>
+			var ACCESS_TOKEN = 'pk.eyJ1IjoibGlzYWtpbGtlciIsImEiOiJjaWVtdGplMG0wMDJndGptNTM4c3hrYjRjIn0.sKD02sZvL3lHX-UJ-i8gsg';
+
+			if ("geolocation" in navigator) {
+			var button = document.getElementById('where-am-i');
+			  	button.addEventListener('click', getLocation);
+			  	var watchID = navigator.geolocation.watchPosition(onWatch, onError, options);
+			} else {
+			  	alert("Geolocation is not available")
+			}
+
+			function getLocation() {
+  				console.log("Getting position"); 
+				navigator.geolocation.getCurrentPosition(onLocation, onError, options);
+
+			}
+
+			function onLocation(position) {
+				console.log("Your latitude is" + position.coords.latitude);
+				console.log("Your longitude is" + position.coords.longitude);
+				document.getElementById("position").innerHTML = "Lat:" +
+				position.coords.latitude + ",Lon" + position.coords.longitude;
+				displayMap(position.coords.latitude, position.coords.longitude);
+				watchLocation();
+			}
+
+			function watchLocation() {
+				console.log('Getting location...')
+				var watchID = navigator.geolocation.watchPosition(onWatch, onError, options);
+				navigator.geolocation.clearWatch(watchId);
+			}
+
+			var target = {
+				latitude : 0,
+				longitude: 0
+			};
+
+			function onWatch(position) {
+				console.log("Your latitude is" + position.coords.latitude);
+				console.log("Your longitude is" + position.coords.longitude);
+				console.log("You're being watched... ");
+			}
+
+			function onError(error) {
+			  console.log("We lost your position: " + error);
+			}
+
+			var watchOptions = {
+			  enableHighAccuracy: true,
+			  timeout: 5000,
+			  maximumAge: 0
+			}
+
+			var options = {
+				enableHighAccurace: true
+			};
+
+			function displayMap(lat, lon) {
+  			var urlRoot = "https://www.mapbox.com/developers/api/static/";
+
+  			var imgSrc = "https://api.mapbox.com/v4/mapbox.streets-satellite/" + lon + "," + lat +",14/500x500.png?access_token=" + ACCESS_TOKEN
+  				console.log(imgSrc);
+  			$("#map").attr("src", imgSrc);
+  			}
+
+		</script>
+	</body>
+</html>
+
+<!-- https://api.mapbox.com/v4/marker/pin-s.png?access_token=pk.eyJ1IjoibGlzYWtpbGtlciIsImEiOiJjaWVtdGplMG0wMDJndGptNTM4c3hrYjRjIn0.sKD02sZvL3lHX-UJ-i8gsg -->
