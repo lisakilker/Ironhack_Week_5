@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Spotify</title>
+	<link rel="stylesheet" type="text/css" href="spotify2.css">
+</head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<body>
+		<form>
+	        Enter Song<br><input type="text" id="title" name="title"><br>
+	        <button class="js-submit" type="submit">Get Song</button>
+	        <div class="title" id="song">Title</div>
+			<div class="artist" id="artist">Artist</div>
+	    </form>
+		<div class="widget">
+		<div class="header">
+		<div class="btn-play enabled playing" id="pausing"></div>
+		<div class="btn-play disabled" id="playing"></div>
+		<div class="metadata">
+		<div class="seekbar">
+			<progress value="5" max="30"></progress>
+		</div>
+		</div>
+		</div>
+		<div class="cover">
+			<img src="" class="js-image" id="myImage">
+		</div>
+			<audio src="" class="js-player" id="myAudio" controls autoplay></audio>
+		</div>
+		<script>
+		    function showSong (event) {
+		    	event.preventDefault();
+		      	console.log('SUBMITTED');
+		   		var name = $('[name=title]').val()
+		    	fetchSong(name)
+		    }
+
+		    function fetchSong() {
+		    	var title = $("#title").val()
+		    	var request = $.get('https://api.spotify.com/v1/search?type=track&query=' + title);
+		      	request.done(postSong);
+		    }
+
+		    function postSong(song) {
+		      	console.log("REQUEST DONE", song);
+		      	console.log(song.tracks.items[0].preview_url);
+		      	$("#myAudio").attr('src', song.tracks.items[0].preview_url);
+		      	$("#song").text(song.tracks.items[0].name)
+		      	$("#artist").text(song.tracks.items[0].artists[0].name)
+		      	$("#myImage").attr('src', song.tracks.items[0].album.images[0].url);
+		    };
+
+		    function playMusic(event){
+		    	event.preventDefault();
+		    	$("#myAudio").trigger('play');
+		    }
+
+		    function stopMusic(event){
+		    	event.preventDefault();
+		    	$('#myAudio').trigger('pause');
+			}
+			    $(".js-submit").on('click', showSong);
+			    $("#playing").on('click', playMusic);
+			    $("#pausing").on('click', stopMusic);
+		</script>
+	</body>
+</html>
